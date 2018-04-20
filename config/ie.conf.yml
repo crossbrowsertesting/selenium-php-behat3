@@ -1,0 +1,44 @@
+default:
+    autoload:
+        '': '%paths.base%/../features/bootstrap'
+    suites:
+        default:
+            paths: [ '%paths.base%/../features' ]                
+            contexts:
+                - FeatureContext:
+                    parameters:
+                        server: "crossbrowsertesting.com"
+                        user: "CBT_USER_EMAIL"
+                        key: "CBT_AUTH_KEY"
+                        capabilities:
+                            # capabilities added here are applied to every test that is run
+                            name: "Behat - IE Test"
+                            build: "1.0.0"
+                            record_video: "true"
+                            record_network: "true"
+                            max_duration: 300 # time in seconds
+                        browsers:
+                            # each item in this list is run as a single test
+                            # so to run multiple tests in parallel, 
+                            # simply define multiple browsers below and run the test with 
+                            # $ php run-parallel.php -c config/<filename>.yml
+                            -
+                                os_api_name: "Win10"
+                                browser_api_name: "Edge20"
+                                resolution: "1920x1080"
+                            -
+                                os_api_name: "Win10"
+                                browser_api_name: "IE11"
+                                resolution: "1920x1080"
+                            -
+                                os_api_name: "Win7x64-C2"
+                                browser_api_name: "IE10"
+                                resolution: "1920x1080"
+                            -
+                                os_api_name: "Win7x64-C1"
+                                browser_api_name: "IE9"
+                                resolution: "1920x1080"
+                            -
+                                os_api_name: "Win7-C1"
+                                browser_api_name: "IE8"
+                                resolution: "1920x1080"

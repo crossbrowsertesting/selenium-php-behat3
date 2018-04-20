@@ -1,0 +1,13 @@
+{
+    "require": {
+        "behat/behat": "3.4.*@stable",
+        "facebook/webdriver": "dev-master",
+        "symfony/yaml": "*"
+    },
+    "config": {
+        "bin-dir": "bin/"
+    },
+    "autoload": {
+      "classmap": ["lib/"]
+    }
+}
