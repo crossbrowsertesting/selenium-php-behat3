@@ -15,5 +15,7 @@ Feature: Login to page
         Given I go to "http://crossbrowsertesting.github.io/login-form.html"
         When I fill in "#username" with "tester@crossbrowsertesting.com"
         And I fill in "#password" with "test123"
+        And I take a screenshot
         And I press ".form-actions > button" 
-        Then I should see "#logged-in-message>p" say "You are now logged in!" 
+        Then I should see "#logged-in-message>p" say "You are now logged in!"
+        And I take a screenshot

@@ -24,5 +24,5 @@ default:
                             # $ php run-parallel.php -c config/<filename>.yml
                             -
                                 os_api_name: "Win10"
-                                browser_api_name: "Edge20"
-                                resolution: "1920x1080"
+                                browser_api_name: "Edge16"
+                                screen_resolution: "1920x1080"

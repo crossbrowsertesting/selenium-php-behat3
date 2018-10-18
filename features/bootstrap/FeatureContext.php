@@ -71,4 +71,83 @@ class FeatureContext extends CBTContext{
     
   }
 
+  /**
+   * @When I take a screenshot
+   */
+  public function iTakeAScreenshot()
+  {
+    $sessionId = self::$driver->getSessionId();
+    $url = "https://crossbrowsertesting.com/api/v3/selenium/{$sessionId}/snapshots";
+    $params = array(
+      'selenium_test_id' => $sessionId, // required
+      'format' => 'json',
+    );
+    $result = $this->callApi($url, 'POST', $params);
+  }
+
+  /**
+   * @param string $api_url
+   * @param string $method
+   * @param mixed $params
+   *
+   * @return mixed
+   *
+   * @throws Exception
+   */
+  private function callApi($api_url, $method = 'GET', $params = false){
+    $apiResult = new stdClass();
+    $process = curl_init();
+    switch ($method){
+      case "POST":
+        curl_setopt($process, CURLOPT_POST, 1);
+        if ($params){
+          curl_setopt($process, CURLOPT_POSTFIELDS, http_build_query($params));
+          curl_setopt($process, CURLOPT_HTTPHEADER, array('User-Agent: php')); //important
+        }
+        break;
+      case "PUT":
+        curl_setopt($process, CURLOPT_CUSTOMREQUEST, "PUT");
+        if ($params){
+          curl_setopt($process, CURLOPT_POSTFIELDS, http_build_query($params));
+          curl_setopt($process, CURLOPT_HTTPHEADER, array('User-Agent: php')); //important
+        }
+        break;
+      case 'DELETE':
+        curl_setopt($process, CURLOPT_CUSTOMREQUEST, "DELETE");
+        break;
+      default:
+        if ($params){
+          $api_url = sprintf("%s?%s", $api_url, http_build_query($params));
+        }
+    }
+    // Optional Authentication:
+    curl_setopt($process, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+    curl_setopt($process, CURLOPT_USERPWD, self::$CONFIG['user'] . ":" . self::$CONFIG['key']);
+    curl_setopt($process, CURLOPT_URL, $api_url);
+    curl_setopt($process, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($process, CURLOPT_TIMEOUT, 30);
+    $apiResult->content = curl_exec($process);
+    $apiResult->httpResponse = curl_getinfo($process);
+    $apiResult->errorMessage =  curl_error($process);
+    $apiResult->params = $params;
+    curl_close($process);
+    $paramsString = $params ? http_build_query($params) : '';
+    $response = json_decode($apiResult->content);
+
+    if ($apiResult->httpResponse['http_code'] != 200){
+      $message = 'Error calling "' . $apiResult->httpResponse['url'] . '" ';
+      $message .= (isset($paramsString) ? 'with params "'.$paramsString.'" ' : ' ');
+      $message .= '. Returned HTTP status ' . $apiResult->httpResponse['http_code'] . ' ';
+      $message .= (isset($apiResult->errorMessage) ? $apiResult->errorMessage : ' ');
+      $message .= (isset($response->message) ? $response->message : ' ');
+      throw new Exception($message);
+    } else {
+      $response = json_decode($apiResult->content);
+
+      if (isset($response->status)){
+        throw new Exception('Error calling "' . $apiResult->httpResponse['url'] . '"' . (isset($paramsString) ? 'with params "'.$paramsString.'"' : '') . '". ' . $response->message);
+      }
+    }
+    return $response;
+  }
 }
