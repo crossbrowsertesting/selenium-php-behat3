@@ -8,8 +8,8 @@ default:
                 - FeatureContext:
                     parameters:
                         server: "crossbrowsertesting.com"
-                        user: "CBT_USER_EMAIL"
-                        key: "CBT_AUTH_KEY"
+                        user: "cristianangulonova@gmail.com"
+                        key: "uba7973b70c21380"
                         capabilities:
                             # capabilities added here are applied to every test that is run
                             name: "Behat - single test"
