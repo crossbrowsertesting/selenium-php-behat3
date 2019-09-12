@@ -18,6 +18,13 @@ First, make sure you have PHP Dependency Manager [**Composer**](https://getcompo
 
 Once you have Composer, the easiest way to get set up would be to clone this repository, then run `composer install` to install the modules listed in `composer.json` (and their dependencies).
 
+### Installing with Docker (and Docker compose)
+
+- You must have installed [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/)
+- Clone this repository: https://github.com/nietzscheson/selenium-php-behat3.git
+- Run docker-compose: docker-compose up -d
+- Run composer: docker-compose run --rm php composer install --prefer-dist
+
 ### Setting up conf.yml files
 
 In order to run any tests, you'll need to make a few changes to the configuration files located in `config/`.
@@ -112,7 +119,7 @@ Now we just have to write some Selenium code to define each step! This isn't a S
 Now that everything is set up, let's try running the test!
 
 ```
-$ bin/behat -c config/single.conf.yml
+$ bin/behat -c config/single.conf.yml || docker-compose run --rm php bin/behat -c config/single.conf.yml
 
 Feature: Test a login form
 
